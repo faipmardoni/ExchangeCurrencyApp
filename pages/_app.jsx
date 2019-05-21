@@ -1,39 +1,39 @@
-import React from 'react'
-import App, { Container } from 'next/app'
-import Head from 'next/head'
-import withRedux from 'next-redux-wrapper'
-import { Provider } from 'react-redux'
-import { MuiThemeProvider } from '@material-ui/core/styles'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import JssProvider from 'react-jss/lib/JssProvider'
-import store from '../src/store'
-import getPageContext from '../src/utils/getPageContext'
+import React from 'react';
+import App, { Container } from 'next/app';
+import Head from 'next/head';
+import withRedux from 'next-redux-wrapper';
+import { Provider } from 'react-redux';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import JssProvider from 'react-jss/lib/JssProvider';
+import store from '../redux/store';
+import getPageContext from '../utils/getPageContext';
 
-const _App = withRedux(store)(
-  class _App extends App {
+const Index = withRedux(store)(
+  class Index extends App {
     pageContext = getPageContext()
 
-    static async getInitialProps ({ Component, ctx }) {
+    static async getInitialProps({ Component, ctx }) {
       return {
         pageProps: Component.getInitialProps
           ? await Component.getInitialProps(ctx)
-          : {}
-      }
+          : {},
+      };
     }
 
-    componentDidMount () {
-      const jssStyles = document.querySelector('#jss-server-side')
+    componentDidMount() {
+      const jssStyles = document.querySelector('#jss-server-side');
       if (jssStyles && jssStyles.parentNode) {
-        jssStyles.parentNode.removeChild(jssStyles)
+        jssStyles.parentNode.removeChild(jssStyles);
       }
     }
 
-    render () {
+    render() {
       const {
         Component,
         pageProps,
-        store
-      } = this.props
+        store: storeProps,
+      } = this.props;
 
       return (
         <Container>
@@ -49,7 +49,7 @@ const _App = withRedux(store)(
               sheetsManager={this.pageContext.sheetsManager}
             >
               <CssBaseline />
-              <Provider store={store}>
+              <Provider store={storeProps}>
                 <Component
                   pageContext={this.pageContext}
                   {...pageProps}
@@ -58,9 +58,9 @@ const _App = withRedux(store)(
             </MuiThemeProvider>
           </JssProvider>
         </Container>
-      )
+      );
     }
-  }
-)
+  },
+);
 
-export default _App
+export default Index;
