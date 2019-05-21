@@ -44,7 +44,6 @@ export const initialState = {
   showSelectAvailableCurrencies: false,
 };
 
-export const SET_LATEST_RATES = 'SET_LATEST_RATES';
 export const GET_LATEST_RATES = 'GET_LATEST_RATES';
 export const GET_LATEST_RATES_LOADING = 'GET_LATEST_RATES_LOADING';
 export const GET_LATEST_RATES_ERROR = 'GET_LATEST_RATES_ERROR';

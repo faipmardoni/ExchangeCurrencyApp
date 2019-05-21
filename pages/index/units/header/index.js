@@ -9,7 +9,6 @@ const mapStateToProps = ({ home: { base, value } }) => ({
   value,
 });
 
-const mapDispatchToProps = {
-};
+const mapDispatchToProps = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
