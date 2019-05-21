@@ -19,7 +19,7 @@ function Header({
           <Typography gutterBottom variant="h3">{base}</Typography>
         </Grid>
         <Grid item>
-          <Typography variant="h3">{value}</Typography>
+          <Typography variant="h3">{value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</Typography>
         </Grid>
       </Grid>
     </>

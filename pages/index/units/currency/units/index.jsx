@@ -50,7 +50,7 @@ function Currency({
                 </Grid>
                 <Grid item>
                   <Typography component="h5" variant="h5">
-                    {rate * value}
+                    {(rate * value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
                   </Typography>
                 </Grid>
               </Grid>
@@ -58,7 +58,7 @@ function Currency({
                 {standsForCurrency}
               </Typography>
               <Typography variant="subtitle2" color="textSecondary">
-                {`${1} ${base} = ${currency} ${rate}`}
+                {`${1} ${base} = ${currency} ${rate.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`}
               </Typography>
             </CardContent>
           </div>
