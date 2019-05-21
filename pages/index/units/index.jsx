@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import Add from '@material-ui/icons/Add';
 
 import Currency from './currency';
@@ -37,71 +38,90 @@ const styles = theme => ({
   menu: {
     width: 200,
   },
+  linearColorPrimary: {
+    backgroundColor: '#b2dfdb',
+  },
+  linearBarColorPrimary: {
+    backgroundColor: '#00695c',
+  },
 });
 
 function Home({
-  classes, currencies, showSelectAvailableCurrencies, setShowSelectAvailableColumns,
-  availableCurrencies, addCurrenciesList,
+  classes, currencies, showSelectAvailableCurrencies, setShowSelectAvailableColumns, getLatestRates,
+  availableCurrencies, addCurrenciesList, getLatestRatesLoading,
 }) {
   const [selectedCurrency, setSelectedCurrency] = useState(undefined);
+  useEffect(() => {
+    getLatestRates();
+  }, []);
   return (
-    <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <Grid container spacing={16} direction="column">
-          <Header />
-          <Divider />
-          {currencies.map((currency, idx) => (
-            <Currency key={currency} currency={currency} idx={idx} />
-          ))}
-          {showSelectAvailableCurrencies ? (
-            <>
-              <TextField
-                id="outlined-select-currency-native"
-                select
-                label="Currency"
-                className={classes.textField}
-                value={selectedCurrency}
-                onChange={e => setSelectedCurrency(e.target.value)}
-                SelectProps={{
-                  native: true,
-                  MenuProps: {
-                    className: classes.menu,
-                  },
-                }}
-                helperText="Please select your currency"
-                margin="normal"
-                variant="outlined"
-              >
-                {availableCurrencies.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
+    <>
+      {getLatestRatesLoading && (
+      <LinearProgress
+        classes={{
+          colorPrimary: classes.linearColorPrimary,
+          barColorPrimary: classes.linearBarColorPrimary,
+        }}
+      />
+      )}
+      <div className={classes.root}>
+        <Paper className={classes.paper}>
+          <Grid container spacing={16} direction="column">
+            <Header />
+            <Divider />
+            {currencies.map((currency, idx) => (
+              <Currency key={currency} currency={currency} idx={idx} />
+            ))}
+            {showSelectAvailableCurrencies ? (
+              <>
+                <TextField
+                  id="outlined-select-currency-native"
+                  select
+                  label="Currency"
+                  className={classes.textField}
+                  value={selectedCurrency}
+                  onChange={e => setSelectedCurrency(e.target.value)}
+                  SelectProps={{
+                    native: true,
+                    MenuProps: {
+                      className: classes.menu,
+                    },
+                  }}
+                  helperText="Please select your currency"
+                  margin="normal"
+                  variant="outlined"
+                >
+                  {availableCurrencies.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </TextField>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={() => addCurrenciesList(selectedCurrency)}
+                >
+                  <Add className={classes.leftIcon} />
+                  Submit
+                </Button>
+              </>
+            ) : (
               <Button
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                onClick={() => addCurrenciesList(selectedCurrency)}
+                onClick={setShowSelectAvailableColumns}
               >
                 <Add className={classes.leftIcon} />
-                Submit
+                Add More Currencies
               </Button>
-            </>
-          ) : (
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={setShowSelectAvailableColumns}
-            >
-              <Add className={classes.leftIcon} />
-              Add More Currencies
-            </Button>
-          )}
-        </Grid>
-      </Paper>
-    </div>
+            )}
+          </Grid>
+        </Paper>
+      </div>
+    </>
   );
 }
 
@@ -119,6 +139,8 @@ Home.propTypes = {
   setShowSelectAvailableColumns: PropTypes.func.isRequired,
   availableCurrencies: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   addCurrenciesList: PropTypes.func.isRequired,
+  getLatestRates: PropTypes.func.isRequired,
+  getLatestRatesLoading: PropTypes.bool.isRequired,
 };
 
 export default withStyles(styles)(Home);
